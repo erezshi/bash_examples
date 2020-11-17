@@ -1,0 +1,58 @@
+Example for bash scripts
+https://github.com/BigDataBoutique/elasticsearch-cloud-deploy/blob/master/assets/scripts/aws/autoattach-disk.sh
+
+USER DATA for Application lb:
+#!/bin/bash
+yum install httpd -y
+systemctl enable httpd
+mkdir /var/www/html/orders/
+echo '<h1> This is Orders App </h1>' > /var/www/html/orders/index.html
+systemctl start httpd
+
+
+
+aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=Orders" \
+    --region eu-central-1 \
+    --query 'Reservations[*].Instances[*].{Instance:InstanceId,Subnet:SubnetId}' \
+    --output text
+
+    aws ec2 describe-instances \
+        --filters "Name=tag:Name,Values=Orders" \
+        --region eu-central-1 \
+        --output json
+
+
+aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=Orders" \
+    --region eu-central-1 \
+    --query 'Reservations[*].Instances[*].{Instance:InstanceId}' \
+    --output text
+
+
+
+aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:us-east-1:053004164066:targetgroup/mgt-devops-test-erezshin-tg/fae142f3a03a1399 \
+                     --region eu-central-1 \
+                     --query "TargetHealthDescriptions[*].TargetHealth.State" --output text
+
+
+aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:eu-central-1:839513984455:targetgroup/Orders/19af8944bec8990d --targets Id=i-0060cdbb2c7169157
+
+aws elbv2 deregister-targets --target-group-arn arn:aws:elasticloadbalancing:eu-central-1:839513984455:targetgroup/Orders/19af8944bec8990d \
+                     --targets Id=i-0060cdbb2c7169157
+
+
+
+                     TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` \
+                     && curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/
+
+                     curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/ami-id
+
+
+                     https://gist.github.com/quiver/87f93bc7df6da7049d41
+                     curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document
+                     curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region
+
+
+
+BASH while exampes: https://www.cyberciti.biz/faq/bash-while-loop/
