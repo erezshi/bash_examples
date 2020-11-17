@@ -13,26 +13,26 @@ systemctl start httpd
 
 aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=Orders" \
-    --region eu-central-1 \
+    --region REGION \
     --query 'Reservations[*].Instances[*].{Instance:InstanceId,Subnet:SubnetId}' \
     --output text
 
     aws ec2 describe-instances \
         --filters "Name=tag:Name,Values=Orders" \
-        --region eu-central-1 \
+        --region REGION \
         --output json
 
 
 aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=Orders" \
-    --region eu-central-1 \
+    --region REGION \
     --query 'Reservations[*].Instances[*].{Instance:InstanceId}' \
     --output text
 
 
 
 aws elbv2 describe-target-health --target-group-arn ARN \
-                     --region eu-central-1 \
+                     --region REGION\
                      --query "TargetHealthDescriptions[*].TargetHealth.State" --output text
 
 
